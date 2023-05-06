@@ -1,4 +1,4 @@
-class YourFormulaName < Formula
+class Chat < Formula
   include Language::Python::Virtualenv
 
   desc "Another GPT Wrapper"
