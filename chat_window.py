@@ -3,26 +3,23 @@ import curses
 import textwrap
 
 class ChatWindow:
-    # Add the __init__, add_message, and _update_chat_window methods
-    # from your original code, and adjust them to fit this class
     def __init__(self, stdscr):
         self.stdscr = stdscr
-        self.chat_history = [{
-            'role':'system',
-            'content': "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown."
-        }]
-
         self.window = curses.newpad(10000, curses.COLS)
         self.window.scrollok(False)
         self.scroll_position = 0
-        self.old_chat_history = copy.deepcopy(self.chat_history)
-        curses.curs_set(0)
 
-    def display_messages(self, window_height: int):
+    def display_messages(self, window_height: int, chat_history: list):
+        #chat_window_height = window_height - 1
+        #self.window = curses.newpad(10000, curses.COLS)
+        #self.window.scrollok(False)
+
+        self.window.resize(10000, curses.COLS)
+
         self.window.erase()
         lines_used = 0
 
-        for i, msg in enumerate(self.chat_history):
+        for i, msg in enumerate(chat_history):
             name = str.capitalize(msg['role'])
             formatted_str = f'{name}: {msg["content"]}'
 
@@ -36,7 +33,11 @@ class ChatWindow:
             lines_used += 1
 
         self.window.refresh(self.scroll_position, 0, 0, 0, window_height, curses.COLS)
-        self.old_chat_history = copy.deepcopy(self.chat_history)
 
-    def update_last_message(self, new_content):
-        self.chat_history[-1]['content'] = new_content
+    def handle_scroll(self, direction, total_lines):
+        max_scroll_position = max(0, total_lines - (curses.LINES - 1))
+
+        if direction == 'UP' and self.scroll_position > 0:
+            self.scroll_position -= 1
+        elif direction == 'DOWN' and self.scroll_position < max_scroll_position:
+            self.scroll_position += 1

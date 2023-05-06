@@ -24,7 +24,7 @@ class InputWindow:
             self.window.addstr(i, 0, line)
 
         self.window.refresh()
-        
+
     def is_valid_input(self, user_input) -> bool:
         # a -> z
         if user_input in range(65,91):
@@ -40,9 +40,14 @@ class InputWindow:
 
         return False
 
+    def update_window(self):
+        self.display_input()
+        if not self.user_input:
+            self.reset_input()
+
     def reset_input(self):
         self.window.clear()
         self.window.resize(1, curses.COLS)
         self.window.mvwin(curses.LINES - 1, 0)
-        self.window.addstr(0, 0, f'Type here: {self.user_input}')
+        self.window.addstr(0, 0, f'Type here: ')
         self.window.refresh()

@@ -2,7 +2,7 @@ import threading
 import openai
 
 class GPT:
-    def __init__(self, model: str = 'gpt-4'):
+    def __init__(self, model: str = 'gpt-3.5-turbo'):
         self.temperature = 0.5
         self.max_tokens = 2000
 
@@ -39,5 +39,8 @@ class GPTHandler:
             if not output_delta.get('content'): continue # Empty streams
 
             combined_output += output_delta['content']
-            self.window_manager.update_last_message(combined_output)
-            self.window_manager.update_chat_window()
+            self.window_manager.chat_history[-1]['content'] = combined_output
+            self.window_manager.chat_window.display_messages(
+                self.window_manager.chat_window_height,
+                self.window_manager.chat_history
+            )

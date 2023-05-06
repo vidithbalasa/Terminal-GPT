@@ -65,6 +65,10 @@ class App:
     def handle_input(self):
         c = self.stdscr.getch()
 
+        if c == 180:
+            self.chat_history.append({'role':'L','content':'None'})
+            return
+
         # Arrow up
         if c == curses.KEY_UP:
             self._handle_scroll('up')
